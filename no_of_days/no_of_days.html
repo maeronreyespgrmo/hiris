@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRIS No of Day Generator</title>
+</head>
+<body>
+<!-- File input element -->
+Location: <input type="text" id="location" />
+No of Days <input type="file" id="fileInputDays" /><br><br>
+<div id="showDays"></div>
+<!-- Compute Tardiness <input type="file" id="fileInputTardy" />
+<div id="showTardy"></div> -->
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+<!-- Your JavaScript code -->
+<script>
+  // Function to handle file input change
+  function handleFile(e) {
+    const file = e.target.files[0];
+    const location = document.getElementById("location").value
+
+    if (file) {
+      const reader = new FileReader();
+
+      // Handle file reading completion
+      reader.onload = function (e) {
+        const data = e.target.result;
+        // Use xlsx library to read the Excel file
+        const workbook = XLSX.read(data, { type: 'binary' });
+
+        // Assuming only one sheet in the workbook
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+
+        // Convert sheet data to JSON
+        const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+        // Do something with the JSON data
+        console.log(jsonData);
+
+        var currentDate = new Date();
+
+        let aa = jsonData.map((x,y)=>{
+               
+          if(typeof x[0] == 'undefined'){
+
+          }
+          else{
+            return `<div>case ${x[0]}:// ${location} [${x[1]}] updated by Merr @ ${currentDate}</div>
+                <div>&nbsp;&nbsp;&nbsp;$d_work = ${x[2]};$d_work2 = ${x[2]};$d_work3 = ${x[2]};break;</div>`
+          }
+
+
+        })
+        const myDiv = document.getElementById('showDays');
+        myDiv.innerHTML = aa.join(" , ").replace(/,/g, '');
+        // console.log()
+      
+
+      };
+
+      // Read the file as binary data
+      reader.readAsBinaryString(file);
+    }
+  }
+
+
+  // Attach the handleFile function to the change event of a file input element
+  document.getElementById('fileInputDays').addEventListener('change', handleFile);
+</script>
+
+
+    
+</html>
